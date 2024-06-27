@@ -16,7 +16,7 @@
     <div class="col-sm-10">
       <input
         type="text"
-        [value]="this.transaction?.date"
+        [value]="this.dateConversionService.convertTimestampToDate(this.transaction.date)"
         readonly
         class="form-control"
       />

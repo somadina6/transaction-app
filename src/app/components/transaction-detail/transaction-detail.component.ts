@@ -5,7 +5,6 @@ import { TransactionDataType } from '../../types/transactions.type';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { DateConversionService } from '../../services/date-conversion.service';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -40,8 +39,7 @@ export class TransactionDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public transactionService: TransactionService,
-    public router: Router,
-    private dateConversionService: DateConversionService
+    public router: Router
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +54,7 @@ export class TransactionDetailComponent implements OnInit {
     }
 
     this.transactionService.getTransactionById(id).subscribe(
-      (data) => (this.transaction = {...data,date:this.dateConversionService.convertTimestampToDate(data.date)}),
+      (data) => (this.transaction = data),
       (error) => console.error('Failed to load transaction', error)
     );
   }
