@@ -3,12 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { TransactionDataType } from '../types/transactions.type';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionService {
-  private API_URL = 'http://localhost:4000/transactions';
+  private API_URL = environment.API_URL;
 
   constructor(private http: HttpClient) {}
 
