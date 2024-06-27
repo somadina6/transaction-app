@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:transaction-app": "node dist/transaction-app/server/server.mjs"
+    "serve:ssr:transaction-app": "node dist/transaction-app/server/server.mjs",
+    "server": "node express/server.js"
   },
   "private": true,
   "dependencies": {
