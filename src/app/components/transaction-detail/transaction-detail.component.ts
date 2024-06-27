@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { TransactionDataType } from '../../types/transactions.type';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { DateConversionService } from '../../services/date-conversion.service';
@@ -61,19 +61,23 @@ export class TransactionDetailComponent implements OnInit {
     );
   }
 
-  updateTransaction() {
+  updateTransaction(form: NgForm): void {
     if (!this.transaction) {
       console.error('No transaction data to update');
       return;
     }
 
-    this.transactionService.updateTransaction(this.transaction).subscribe(
-      (updatedTransaction) => {
-        this.transaction = updatedTransaction;
-        console.log('Transaction updated successfully');
-        this.router.navigate(['/transactions']); // Navigate to the transactions list or another appropriate route
-      },
-      (error) => console.error('Failed to update transaction', error)
-    );
+    if (form.valid) {
+      this.transactionService.updateTransaction(this.transaction).subscribe(
+        (updatedTransaction) => {
+          this.transaction = updatedTransaction;
+          console.log('Transaction updated successfully');
+          this.router.navigate(['/transactions']); // Navigate to the transactions list or another appropriate route
+        },
+        (error) => console.error('Failed to update transaction', error)
+      );
+    } else {
+      console.error('Form is invalid');
+    }
   }
 }
