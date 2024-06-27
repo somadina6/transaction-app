@@ -1,0 +1,37 @@
+.table-accessible {
+  width: 50%;
+  max-width: 50%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+
+  th {
+    background-color: #f8f9fa; // Light gray background for table header
+    color: #333; // Dark text color for table header
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  // Adding zebra striping to the table rows
+  tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+  }
+
+  tbody tr:hover {
+    background-color: #e9ecef; // Light gray background on hover
+  }
+
+  a {
+    color: #007bff; // Bootstrap primary color for links
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      color: #0056b3; // Darker shade on hover
+    }
+  }
+}
