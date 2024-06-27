@@ -37,8 +37,8 @@
         #comments="ngModel"
       />
       <div *ngIf="comments.invalid && (comments.dirty || comments.touched)" class="help-block">
-        <div *ngIf="comments.errors?.required">Comments are required.</div>
-        <div *ngIf="comments.errors?.pattern">Only alphanumeric characters are allowed.</div>
+        <div *ngIf="comments.errors?.['required']">Comments are required.</div>
+        <div *ngIf="comments.errors?.['pattern']">Only alphanumeric characters are allowed.</div>
       </div>
     </div>
   </div>
