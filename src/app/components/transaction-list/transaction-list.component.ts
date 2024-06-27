@@ -27,12 +27,15 @@ export class TransactionListComponent implements OnInit {
   loadTransactions(startDate: string, endDate: string): void {
     this.transactionService.getTransactions(startDate, endDate).subscribe(
       (data) => {
-        // Transform the dates after fetching the transactions
-        this.transactions = data.map((transaction) => ({
+        // Filter transactions based on status
+        const filteredData = data.filter((transaction) => 
+          ['COMPLETED', 'IN PROGRESS', 'REJECTED'].includes(transaction.status)
+        );
+
+        // Transform the dates after filtering the transactions
+        this.transactions = filteredData.map((transaction) => ({
           ...transaction,
-          date: this.dateConversionService.convertTimestampToDate(
-            transaction.date
-          ),
+          date: this.dateConversionService.convertTimestampToDate(transaction.date),
         }));
       },
       (error) => {
@@ -40,4 +43,5 @@ export class TransactionListComponent implements OnInit {
       }
     );
   }
+
 }
