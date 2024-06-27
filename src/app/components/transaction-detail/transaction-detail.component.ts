@@ -72,7 +72,7 @@ export class TransactionDetailComponent implements OnInit {
         (updatedTransaction) => {
           this.transaction = updatedTransaction;
           console.log('Transaction updated successfully');
-          this.router.navigate(['/transactions']); // Navigate to the transactions list or another appropriate route
+          this.router.navigate(['/transactions']); // Navigate to the transactions list
         },
         (error) => console.error('Failed to update transaction', error)
       );
