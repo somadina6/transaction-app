@@ -1,10 +1,15 @@
-<form #transactionForm="ngForm" (ngSubmit)="updateTransaction(transactionForm)" class="form-horizontal">
+<form
+  (ngSubmit)="updateTransaction()"
+  class="form-horizontal"
+  [formGroup]="transactionForm"
+>
   <div class="form-group">
     <label class="control-label col-sm-2">ID</label>
     <div class="col-sm-10">
       <input
         type="text"
-        [value]="this.transaction?.id"
+        [value]="transaction ? transaction.id : ''"
+        formControlName="id"
         readonly
         class="form-control"
       />
@@ -16,41 +21,42 @@
     <div class="col-sm-10">
       <input
         type="text"
-        [value]="this.dateConversionService.convertTimestampToDate(this.transaction.date)"
+        [value]="
+          transaction
+            ? dateConversionService.convertTimestampToDate(transaction.date)
+            : ''
+        "
+        formControlName="date"
         readonly
         class="form-control"
       />
     </div>
   </div>
 
-  <div class="form-group" [ngClass]="{'has-error': comments.invalid && (comments.dirty || comments.touched)}">
+  <div class="form-group">
     <label for="comments" class="control-label col-sm-2">Comments</label>
     <div class="col-sm-10">
       <input
         type="text"
-        [(ngModel)]="this.transaction.Comments"
+        formControlName="comments"
         id="comments"
         name="comments"
-        required
         pattern="[a-zA-Z0-9 ]*"
         class="form-control"
-        #comments="ngModel"
       />
-      <div *ngIf="comments.invalid && (comments.dirty || comments.touched)" class="help-block">
-        <div *ngIf="comments.errors?.['required']">Comments are required.</div>
-        <div *ngIf="comments.errors?.['pattern']">Only alphanumeric characters are allowed.</div>
-      </div>
     </div>
   </div>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-primary" [disabled]="transactionForm.invalid">Save</button>
       <button
-        type="button"
-        (click)="router.navigate(['/transactions'])"
-        class="btn btn-secondary"
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="transactionForm.invalid"
       >
+        Save
+      </button>
+      <button type="button" (click)="close()" class="btn btn-secondary">
         Back
       </button>
     </div>

@@ -1,6 +1,5 @@
-// Import Bootstrap styles if not already imported globally
-
 .form-horizontal {
+  width: 100%;
   .form-group {
     margin-bottom: 15px;
   }
@@ -13,7 +12,7 @@
 
   .form-control {
     display: block;
-    width: 70%;
+    width: 100%;
     padding: 10px;
     font-size: 14px;
     line-height: 1.42857143;

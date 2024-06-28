@@ -1,83 +1,92 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { TransactionDataType } from '../../types/transactions.type';
-import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { DateConversionService } from '../../services/date-conversion.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-detail',
   templateUrl: './transaction-detail.component.html',
   styleUrls: ['./transaction-detail.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule],
+  imports: [ReactiveFormsModule],
 })
 export class TransactionDetailComponent implements OnInit {
-  transaction: TransactionDataType = {
-    id: '1',
-    date: '',
-    sender: {
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      IDNumber: '',
-    },
-    recipient: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      accountNumber: '',
-      bank: 'D',
-    },
-    Amount: 0,
-    CurrencyCd: 'CAD',
-    Comments: '',
-    status: 'PENDING',
-  };
+  @Input({ required: true }) trans_id: string = '';
+  @Output() closeDetail = new EventEmitter<void>();
+
+  transactionForm: FormGroup;
+  transaction: TransactionDataType | null = null;
 
   constructor(
     private route: ActivatedRoute,
     public transactionService: TransactionService,
     public router: Router,
     public dateConversionService: DateConversionService
-  ) {}
+  ) {
+    this.transactionForm = new FormGroup({
+      id: new FormControl<string>(''),
+      date: new FormControl<string>(''),
+      comments: new FormControl<string>('', Validators.required),
+    });
+  }
 
   ngOnInit(): void {
     this.loadTransaction();
+
+    this.transactionForm.get('comments')?.valueChanges.subscribe((value) => {
+      if (this.transaction) {
+        this.transaction.Comments = value;
+      }
+    });
   }
 
-  async loadTransaction() {
-    const id = this.route.snapshot.paramMap.get('id');
+  close(): void {
+    this.closeDetail.emit();
+  }
 
-    if (!id) {
-      throw new Error('Transaction ID is required');
+  async loadTransaction(): Promise<void> {
+    if (!this.trans_id) {
+      console.error('Transaction ID is required');
+      return;
     }
 
-    this.transactionService.getTransactionById(id).subscribe(
-      (data) => (this.transaction = data),
-      (error) => console.error('Failed to load transaction', error)
-    );
+    try {
+      const data = await firstValueFrom(
+        this.transactionService.getTransactionById(this.trans_id)
+      );
+      this.transaction = data;
+      this.transactionForm.patchValue({
+        id: data.id,
+        date: this.dateConversionService.convertTimestampToDate(data.date),
+        comments: data.Comments,
+      });
+    } catch (error) {
+      console.error('Failed to load transaction', error);
+    }
   }
 
-  updateTransaction(form: NgForm): void {
+  updateTransaction(): void {
     if (!this.transaction) {
       console.error('No transaction data to update');
       return;
     }
 
-    if (form.valid) {
-      this.transactionService.updateTransaction(this.transaction).subscribe(
-        (updatedTransaction) => {
-          this.transaction = updatedTransaction;
-          console.log('Transaction updated successfully');
-          this.router.navigate(['/transactions']); // Navigate to the transactions list
-        },
-        (error) => console.error('Failed to update transaction', error)
-      );
-    } else {
-      console.error('Form is invalid');
-    }
+    this.transactionService.updateTransaction(this.transaction).subscribe(
+      (updatedTransaction) => {
+        this.transaction = updatedTransaction;
+        console.log('Transaction updated successfully');
+        this.transactionService.getTransactions();
+      },
+      (error) => console.error('Failed to update transaction', error)
+    );
+    this.close();
   }
 }

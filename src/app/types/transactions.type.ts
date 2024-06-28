@@ -1,3 +1,5 @@
+import { InjectionToken } from '@angular/core';
+
 export interface Sender {
   firstName: string;
   lastName: string;
@@ -23,3 +25,7 @@ export interface TransactionDataType {
   Comments: string;
   status: 'COMPLETED' | 'IN PROGRESS' | 'REJECTED' | 'PENDING';
 }
+
+export const TRANSACTION_TOKEN = new InjectionToken<TransactionDataType>(
+  'Transaction'
+);

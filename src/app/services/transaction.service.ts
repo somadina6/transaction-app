@@ -13,16 +13,9 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
-  getTransactions(
-    startDate: string,
-    endDate: string
-  ): Observable<TransactionDataType[]> {
-    const params = new HttpParams()
-      .set('startDate', startDate)
-      .set('endDate', endDate);
-
+  getTransactions(): Observable<TransactionDataType[]> {
     return this.http
-      .get<TransactionDataType[]>(this.API_URL, { params })
+      .get<TransactionDataType[]>(this.API_URL)
       .pipe(
         catchError(
           this.handleError<TransactionDataType[]>('getTransactions', [])

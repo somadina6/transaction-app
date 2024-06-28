@@ -1,6 +1,11 @@
+.main {
+  width: 50vw;
+  padding-top: 20px;
+  margin: auto 20px;
+  display: block;
+}
 .table-accessible {
-  width: 50%;
-  max-width: 50%;
+  width: 100%;
   margin-bottom: 1rem;
   background-color: transparent;
 
@@ -28,6 +33,7 @@
   a {
     color: #007bff; // Bootstrap primary color for links
     text-decoration: none;
+    cursor: pointer;
 
     &:hover {
       text-decoration: underline;
