@@ -9,7 +9,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { DateConversionService } from '../../services/date-conversion.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -59,34 +58,36 @@ export class TransactionDetailComponent implements OnInit {
     }
 
     try {
-      const data = await firstValueFrom(
-        this.transactionService.getTransactionById(this.trans_id)
+      this.transaction = await this.transactionService.getTransactionById(
+        this.trans_id
       );
-      this.transaction = data;
       this.transactionForm.patchValue({
-        id: data.id,
-        date: this.dateConversionService.convertTimestampToDate(data.date),
-        comments: data.Comments,
+        id: this.transaction.id,
+        date: this.dateConversionService.convertTimestampToDate(
+          this.transaction.date
+        ),
+        comments: this.transaction.Comments,
       });
     } catch (error) {
       console.error('Failed to load transaction', error);
     }
   }
 
-  updateTransaction(): void {
+  async updateTransaction(): Promise<void> {
     if (!this.transaction) {
       console.error('No transaction data to update');
       return;
     }
 
-    this.transactionService.updateTransaction(this.transaction).subscribe(
-      (updatedTransaction) => {
-        this.transaction = updatedTransaction;
-        console.log('Transaction updated successfully');
-        this.transactionService.getTransactions();
-      },
-      (error) => console.error('Failed to update transaction', error)
-    );
-    this.close();
+    try {
+      const updatedTransaction =
+        await this.transactionService.updateTransaction(this.transaction);
+      console.log('Transaction updated successfully:', updatedTransaction);
+      await this.transactionService.getTransactions(); // Update the transaction list
+    } catch (error) {
+      console.error('Failed to update transaction:', error);
+    } finally {
+      this.close();
+    }
   }
 }

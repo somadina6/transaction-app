@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import axios from 'axios';
 import { TransactionDataType } from '../types/transactions.type';
 import { environment } from '../../environments/environment.prod';
 
@@ -11,44 +9,45 @@ import { environment } from '../../environments/environment.prod';
 export class TransactionService {
   private API_URL = environment.API_URL;
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  getTransactions(): Observable<TransactionDataType[]> {
-    return this.http
-      .get<TransactionDataType[]>(this.API_URL)
-      .pipe(
-        catchError(
-          this.handleError<TransactionDataType[]>('getTransactions', [])
-        )
-      );
+  async getTransactions(): Promise<TransactionDataType[]> {
+    try {
+      const response = await axios.get<TransactionDataType[]>(this.API_URL);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch transactions:', error);
+      throw error;
+    }
   }
 
-  getTransactionById(id: string): Observable<TransactionDataType> {
-    const params = new HttpParams().set('id', id);
-
-    return this.http
-      .get<TransactionDataType>(this.API_URL, { params })
-      .pipe(
-        catchError(this.handleError<TransactionDataType>('getTransactionById'))
-      );
+  async getTransactionById(id: string): Promise<TransactionDataType> {
+    try {
+      const response = await axios.get<TransactionDataType>(this.API_URL, {
+        params: {
+          id: id,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch transaction with ID ${id}:`, error);
+      throw error;
+    }
   }
 
-  updateTransaction(
+  async updateTransaction(
     transaction: TransactionDataType
-  ): Observable<TransactionDataType> {
+  ): Promise<TransactionDataType> {
     const url = `${this.API_URL}/${transaction.id}`;
-
-    return this.http
-      .put<TransactionDataType>(url, transaction)
-      .pipe(
-        catchError(this.handleError<TransactionDataType>('updateTransaction'))
+    try {
+      const response = await axios.put<TransactionDataType>(url, transaction);
+      return response.data;
+    } catch (error) {
+      console.error(
+        `Failed to update transaction with ID ${transaction.id}:`,
+        error
       );
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error); // log to console instead
-      return of(result as T);
-    };
+      throw error;
+    }
   }
 }
