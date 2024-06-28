@@ -1,12 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-TRANSACTION_TOKEN;
-import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
-import { TRANSACTION_TOKEN } from './types/transactions.type';
 
 @NgModule({
   declarations: [],

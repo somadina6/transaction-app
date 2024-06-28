@@ -25,7 +25,7 @@ export class TransactionService {
     try {
       const response = await axios.get<TransactionDataType>(this.API_URL, {
         params: {
-          id: id,
+          id,
         },
       });
       return response.data;
