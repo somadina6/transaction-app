@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { TransactionDataType } from '../../types/transactions.type';
 import {
@@ -9,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { DateConversionService } from '../../services/date-conversion.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -25,9 +25,7 @@ export class TransactionDetailComponent implements OnInit {
   transaction: TransactionDataType | null = null;
 
   constructor(
-    private route: ActivatedRoute,
     public transactionService: TransactionService,
-    public router: Router,
     public dateConversionService: DateConversionService
   ) {
     this.transactionForm = new FormGroup({

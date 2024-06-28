@@ -3,26 +3,24 @@ import { TransactionService } from '../../services/transaction.service';
 import { TransactionDataType } from '../../types/transactions.type';
 import { DateConversionService } from '../../services/date-conversion.service';
 import { TransactionDetailComponent } from '../transaction-detail/transaction-detail.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.scss'],
   standalone: true,
-  imports: [TransactionDetailComponent],
+  imports: [TransactionDetailComponent, DatePipe],
 })
 export class TransactionListComponent implements OnInit {
   transactions: TransactionDataType[] = [];
   isTransactionDetailShowing = false;
   selectedTransactionId = '';
 
-  constructor(
-    public transactionService: TransactionService,
-    private dateConversionService: DateConversionService
-  ) {}
+  constructor(public transactionService: TransactionService) {}
 
   ngOnInit(): void {
-    this.loadTransactions(); // Example dates
+    this.loadTransactions();
   }
 
   viewDetails(id: string) {
@@ -38,11 +36,6 @@ export class TransactionListComponent implements OnInit {
   async loadTransactions(): Promise<void> {
     try {
       this.transactions = await this.transactionService.getTransactions();
-      this.transactions.forEach((transaction) => {
-        transaction.date = this.dateConversionService.convertTimestampToDate(
-          transaction.date
-        );
-      });
     } catch (error) {
       console.error('Failed to load transactions:', error);
       // Handle error as needed
