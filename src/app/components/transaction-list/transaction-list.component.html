@@ -1,6 +1,4 @@
 <section class="main">
-  @if (!isTransactionDetailShowing){
-
   <table
     class="table table-accessible"
     aria-labelledby="transactionTableHeading"
@@ -20,14 +18,10 @@
         <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>
         <td>{{ transaction.Comments }}</td>
         <td>
-          <a (click)="viewDetails(transaction.id)">View</a>
+          <a [routerLink]="['detail', transaction.id]">View</a>
         </td>
       </tr>
       }
     </tbody>
   </table>
-  } @else {<app-transaction-detail
-    [trans_id]="selectedTransactionId"
-    (closeDetail)="onCloseDetail()"
-  />}
 </section>

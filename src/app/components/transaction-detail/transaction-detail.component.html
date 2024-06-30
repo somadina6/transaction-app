@@ -40,7 +40,11 @@
       >
         Save
       </button>
-      <button type="button" (click)="close()" class="btn btn-secondary">
+      <button
+        type="button"
+        (click)="router.navigate(['/transactions'])"
+        class="btn btn-secondary"
+      >
         Back
       </button>
     </div>

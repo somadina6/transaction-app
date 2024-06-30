@@ -4,13 +4,14 @@ import { TransactionDataType } from '../../types/transactions.type';
 import { DateConversionService } from '../../services/date-conversion.service';
 import { TransactionDetailComponent } from '../transaction-detail/transaction-detail.component';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.scss'],
   standalone: true,
-  imports: [TransactionDetailComponent, DatePipe],
+  imports: [TransactionDetailComponent, DatePipe, RouterLink],
 })
 export class TransactionListComponent implements OnInit {
   transactions: TransactionDataType[] = [];

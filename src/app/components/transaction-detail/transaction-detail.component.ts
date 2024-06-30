@@ -9,22 +9,25 @@ import {
 } from '@angular/forms';
 import { DateConversionService } from '../../services/date-conversion.service';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-detail',
   templateUrl: './transaction-detail.component.html',
   styleUrls: ['./transaction-detail.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
 })
 export class TransactionDetailComponent implements OnInit {
-  @Input({ required: true }) trans_id: string = '';
+  trans_id: string | null = '';
   @Output() closeDetail = new EventEmitter<void>();
 
   transactionForm: FormGroup;
   transaction: TransactionDataType | null = null;
 
   constructor(
+    public router: Router,
+    private route: ActivatedRoute,
     public transactionService: TransactionService,
     public dateConversionService: DateConversionService
   ) {
@@ -50,15 +53,15 @@ export class TransactionDetailComponent implements OnInit {
   }
 
   async loadTransaction(): Promise<void> {
-    if (!this.trans_id) {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (!id) {
       console.error('Transaction ID is required');
       return;
     }
 
     try {
-      this.transaction = await this.transactionService.getTransactionById(
-        this.trans_id
-      );
+      this.transaction = await this.transactionService.getTransactionById(id);
       this.transactionForm.patchValue({
         id: this.transaction.id,
         date: this.dateConversionService.convertTimestampToDate(
@@ -85,7 +88,7 @@ export class TransactionDetailComponent implements OnInit {
     } catch (error) {
       console.error('Failed to update transaction:', error);
     } finally {
-      this.close();
+      this.router.navigateByUrl('/transactions');
     }
   }
 }

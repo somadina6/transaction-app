@@ -6,6 +6,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 
 export const routes: Routes = [
   { path: 'transactions', component: TransactionListComponent },
+  { path: 'transactions/detail/:id', component: TransactionDetailComponent },
 ];
 
 @NgModule({

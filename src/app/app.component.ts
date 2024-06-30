@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ import { TransactionListComponent } from './components/transaction-list/transact
     RouterLink,
     TransactionDetailComponent,
     TransactionListComponent,
+    RouterLinkActive,
+    CommonModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
